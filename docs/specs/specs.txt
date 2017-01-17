@@ -1,0 +1,64 @@
+Topology:
+    |-> Devices (Processes):
+    |       |-> Servers:
+    |       |       |-> Identifier
+    |       |       |-> IP Address
+    |       |       |-> Port
+    |       |       |-> Protocol (+ configuration if relevant)
+    |       |       |-> Variables
+    |       |       |-> **Behavior: FSM on variables
+    |       |
+    |       |-> Clients:
+    |               |-> Identifier
+    |               |-> IP Address
+    |               |-> Variables (local view of server variables)
+    |               |-> **Behavior: FSM on variables
+    |
+    |-> Channels:
+            |-> Client
+            |-> Server
+
+Security properties:
+    |-> Protocol (+ configuration if relevant):
+    |       |-> Set of supported security features from the set SF of all
+    |               supported security features (to define from classical
+    |               security properties, e.g.: authentication, secrecy,
+    |               integrity, etc)
+    |
+    |-> **Security properties to check
+    |-> **Intruder:
+
+Behavior:
+    |-> Finite set of states S:
+    |       |-> Based on combination of variables values
+    |
+    |-> Start state S0 in S
+    |-> Finite set of inputs Sigma:
+    |       |-> Operation on a variable OP x V:
+    |               |-> OP = {READ, WRITE}
+    |               |-> V = Variables
+    |
+    |-> Finite set of outputs Lambda:
+    |       |-> Maybe reduced to OK/KO?
+    |
+    |-> Transition function T: S x Sigma -> S
+    |-> Output function G: S x Sigma -> Lambda (Mealy machine OK?)
+
+Security properties to check:
+    |-> LTL protery on outputs from Lambda:
+            |-> E.g.: Never pour liquid if a bottle is not in place under.
+                ALWAYS (NOT Pour_liquid OR Bottle_in_place)
+
+Intruder:
+    |-> Capacities:
+    |       |-> Set of Horn-clauses, each associated to a set of security
+    |       |   features invalidating it (e.g.: modify a timestamp of a message
+    |       |   is impossible if integrity measures are present).
+    |       |   The intruder shall only use Horn-clauses on a channel that are
+    |       |   not invalidated by the security features of the protocol of the
+    |       |   channel.
+    |       |-> Having to manually link clauses to invalidating SF is a weak
+    |           point, how to automatically deduce them from the clause?
+    |
+    |-> Objectives:
+            |-> Redundant with security properties?

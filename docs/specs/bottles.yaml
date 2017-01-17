@@ -1,0 +1,137 @@
+topology:
+    servers:
+         bottleFactory:
+            ip: 127.0.0.1,
+            port: 520,
+            protocol: MODBUS,
+
+            sensors:
+                levelSensor: (Holding, 0x1)     # Bottle filled or not.
+                bottleInPlace: (Holding, 0x2)   # Bottle in place or not.
+                processRun: (Holding, 0x10)     # Whole process running or not.
+
+            actuators:
+                motor: (Holding, 0x3)   # Conveyor belt running or not.
+                nozzle: (Holding, 0x4)  # Pouring liquid or not.
+
+            behavior:
+                states: {Iddle, Moving, Pouring}
+                start: Iddle
+                inputs: sensors    # Not exactly sensors by the assignation of a value to a sensor ?
+                outputs: actuator  # Not exactly sensors by the assignation of a value to an activator ?
+
+                transFunc: [
+                    [Iddle, (processRun = True), Moving],
+                    [Moving, (bottleInPlace = True), Pouring],
+                    [Pouring, (bottleFilled = True), Moving],
+                    [Moving, (processRun = False), Iddle],
+                    [Pouring, (processRun = False), Iddle]
+                ]
+
+                outputFunc: [
+                    [Iddle, (motor = True, nozzle = False), Moving],
+                    [Moving, (motor = False, nozzle = True), Pouring],
+                    [Pouring, (motor = True, nozzle = False), Moving],
+                    [Moving, (motor = False, nozzle = False), Iddle],
+                    [Pouring, (motor = False, nozzle = False), Iddle]
+                ]
+
+    clients:
+        hmi: {
+            ip: 127.0.0.1,
+
+            sensors: {
+                levelSensor: (Holding, 0x1),    # Bottle filled or not.
+                bottleInPlace: (Holding, 0x2),  # Bottle in place or not.
+                motor: (Holding, 0x3),          # Conveyor belt running or not.
+                nozzle: (Holding, 0x4)          # Pouring liquid or not.
+            },
+
+            actuators: {
+                processRun: (Holding, 0x10)     # Whole process running or not.
+            },
+
+            behavior: {
+                states: {Iddle, Running},
+                start: Iddle,
+                inputs: sensors,
+                outputs: activators,
+
+                transFunc: [
+                    [Iddle, any, Running]
+                ],
+
+                outputFunc: [
+                    [Iddle, (processRun = True), Running]
+                ]
+            }
+        }
+
+    channels:
+        chan: {
+            server: bottleFactory,
+            client: hmi
+        }
+
+
+protocols:
+    modbus: {
+        funcCodes: {
+            read: {
+                request: (read, var),
+                response: (read, val)
+            },
+
+            write: {
+                request: (write, var, val),
+                response: (write, var, val)
+            },
+
+            security: None
+        }
+    }
+
+#[SAFETY_PROPERTIES_TO_CHECK]
+#
+#ALWAYS (
+#    bottleFactory.actuators.nozzle == False
+#    OR (
+#        bottleFactory.sensors.bottleInPlace == True
+#        AND bottleFactory.actuators.motor == False
+#    )
+#)
+#
+#[INTRUDER]
+#
+## Read variable request forging:
+#var :- (read, var).
+#
+## Read variable response forging:
+#var :- (read, val).
+#
+## Write variable request forging:
+#var, val :- (write, var, val).
+#
+## Write variable response forging:
+#var, val :- (write, var, val).
+#
+## read request alteration:
+#(read, _), var :- (read, var).
+#
+## read response alteration:
+#(read, _), val :- (read, val).
+#
+## write request alteration:
+#(write, _, _), var, val :- (write, var, val).
+#
+## write response alteration:
+#(write, _, _), var, val :- (write, var, val).
+#
+## Invert a boolean in a read response:
+#(read, b) :- (read, not b)
+#
+## Invert a boolean in a write request:
+#(write, var, b) :- (write, var, not b)
+#
+## Invert a boolean in a write response:
+#(write, var, b) :- (write, var, not b)
