@@ -139,7 +139,7 @@ class Automaton(object):
         # If no transition was matching and missing transition "seems" relevant, raise.
         # Transition is declared relevant if at least one of its variables is an
         # input of the automaton and changes value.
-        for varMap,newVal in msgL:
+        for varMap,newVal in msgL.items():
             if varMap in self._variables.values():
                 if self._values[varMap] is None:
                     self._values[varMap] = newVal
