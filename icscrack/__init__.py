@@ -1,2 +1,2 @@
-from .core import Automaton
-from .modbus import callback as modbusCallback
+from .core import Automaton, fromYaml
+from .modbus import modbusHandler

@@ -25,13 +25,43 @@
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #   IN THE SOFTWARE.
 
-
-from . import errors
-
+import os
+import re
+import ast
+import xml.etree.ElementTree as ET
 import yaml
 
 
+from . import errors
+
+
+##  Returns as many automata instance as behaviors provided in a Yaml file.
+##  @param  yamlPath Input Yaml file path.
+#   @return The list of automata from a Yaml file.
+def fromYaml(yamlPath):
+    """ Returns as many automata instance as behaviors provided in a Yaml file. """
+    with open(yamlPath, "r") as handle:
+        yamlObj = yaml.load(handle.read())
+
+    agents = yamlObj["topology"]["servers"].copy()
+    agents.update(yamlObj["topology"]["clients"])
+    res = []
+    for name, attributes in agents.items():
+        try:
+            variables = attributes["variables"]
+            behavior = "{}/{}".format(
+                os.path.dirname(yamlPath),
+                attributes["behavior"]
+            )
+            res.append(Automaton.fromJFF(name, behavior, variables))
+        except KeyError:
+            pass
+
+    return res
+
+
 class Automaton(object):
+    _name       = None
     _states     = None
     _start      = None
     _inputs     = None
@@ -40,17 +70,30 @@ class Automaton(object):
     _outputFunc = None
     _current    = None
 
-    def __init__(self, states, start, inputs, outputs, transFunc, outputFunc):
+    def __init__(self, name, states, start, inputs, outputs, transFunc, outputFunc):
+        self._name       = name
         self._states     = states
         self._start      = start
         self._inputs     = inputs
         self._outputs    = outputs
         self._transFunc  = transFunc
-        print(self._transFunc)
         self._outputFunc = outputFunc
         self._values     = {k: None for k in self._inputs}
 
         self._current    = self._start
+
+
+    ##  Returns the name of the automaton.
+    #   @return The name of the automaton.
+    def getName(self):
+        return self._name
+
+
+    ##  Returns the name of a variable from its mapping.
+    #   @param  mapping Mapping of the variable.
+    #   @return The name of a variable from its mapping.
+    #def getVariableName(self, mapping):
+    #    for varName,varMap in self._
 
 
     ##  Update the automaton from a list of input messages.
@@ -73,6 +116,7 @@ class Automaton(object):
 
         def _removeIgnored(varsL, ignored):
             return set(filter(lambda _: _[1] not in ignored, varsL))
+
 
         inputs,ignored = _computeInputs(msgL)
         for state,varsL in self._transFunc.keys():
@@ -99,29 +143,56 @@ class Automaton(object):
                     raise errors.TransitionError(msgL)
 
 
-    ##  Returns an automaton from a Yaml file.
-    ##  @param  yamlPath Input Yaml file path.
-    #   @return An automaton from a Yaml file.
+    ##  Returns an automaton from a JFF file.
+    #   @param  name        Name of the automaton.
+    #   @param  jffPath     Input JFF file path.
+    #   @param  variables   Variables mappings.
+    #   @return An automaton from a JFF file.
     @classmethod
-    def fromYaml(cls, yamlObj):
-        """ Returns an automaton from a Yaml file. """
-        with open(yamlPath, "r") as handle:
-            yamlObj = yaml.load(handle.read())
+    def fromJFF(cls, name, jffPath, variables):
+        """ Returns an automaton from a JFF file. """
+        pattern = re.compile("(\w+), (\w+)")
+        def _parseTrans(trans):
+            res = []
+            if trans is not None:
+                for varName,val in pattern.findall(trans):
+                    res += [(tuple(variables[varName]), val == "True")]
+
+            return res
+
+        typ,auto = ET.parse(jffPath).getroot().getchildren()
+        if typ.text != "mealy":
+            raise errors.ParseError("Mealy automaton expected!")
+
+        states     = {}
+        start      = None
+        inputs     = set()
+        outputs    = set()
+        transFunc  = {}
+        outputFunc = {}
+        for node in auto.getchildren():
+            if node.tag == "state":
+                nodeId = node.get("id")
+                nodeName = node.get("name")
+                states[nodeId] = nodeName
+                if any(_.tag == "initial" for _ in node.getchildren()):
+                    start = nodeName
+            elif node.tag == "transition":
+                nodeFrom,nodeTo,trans,output = [_.text for _ in node.getchildren()]
+                trans = _parseTrans(trans)
+                output = _parseTrans(output)
+
+                inputs = inputs.union(set([_[0] for _ in trans]))
+                outputs = outputs.union(set([_[0] for _ in output]))
+                transFunc[(states[nodeFrom], tuple(trans))] = states[nodeTo]
+                outputFunc[(states[nodeFrom], states[nodeTo])] = output
 
         return cls(
-            yamlObj["states"],
-            yamlObj["start"],
-            yamlObj["inputs"],
-            yamlObj["outputs"],
-            yamlObj["transFunc"],
-            yamlObj["outputFunc"]
+            name,
+            states,
+            start,
+            inputs,
+            outputs,
+            transFunc,
+            outputFunc
         )
-
-
-    ##  Returns an automaton from a parsed JFF object.
-    ##  @param  yamlObj Input parsed JFF object.
-    #   @return An automaton from a parsed JFF object.
-    @classmethod
-    def fromJFF(cls, jffObj):
-        """ Returns an automaton from a parsed JFF object. """
-        return None#cls(

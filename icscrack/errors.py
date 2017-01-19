@@ -47,3 +47,26 @@ class TransitionError(Exception):
     #   @return The string representation of the exception.
     def __str__(self):
         return str(self._value)
+
+
+##  Automaton parse error.
+class ParseError(Exception):
+    """ Automaton parse error. """
+
+    ##  @var _value
+    #   Value of the exception.
+    _value = None
+
+    ##  Constructor.
+    #   @param  value   Value to assign to the exception.
+    def __init__(self,
+                 value
+                ):
+        super(ParseError, self).__init__(value)
+        self._value = value
+
+
+    ##  String representation of the exception.
+    #   @return The string representation of the exception.
+    def __str__(self):
+        return str(self._value)

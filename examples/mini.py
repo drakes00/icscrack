@@ -6,19 +6,34 @@ import argparse
 import scapy.all as scpy
 import yaml
 
+
 SERVER_PORT = 5020
 
 
-def parseYaml(path):
-    with open(path, "r") as handle:
-        yamlObj = yaml.load(handle.read())
-        servers = yamlObj["topology"]["servers"]
+def w_printer(automata):
+    def doPrinter(seqNb, parsed):
+        for automaton in automata:
+            if automaton.getName() not in ("hmi", "bottleFactory"):
+                continue
 
-        res = []
-        for name, attributes in servers.items():
-            res.append(icscrack.Automaton.fromYaml(attributes["behavior"]))
+            msgL = sum(
+                filter(
+                    None,
+                    map(
+                        lambda _: _[1] if _[0] in ("ReadResp", "WriteReq") else [],
+                        parsed
+                    )
+                ), []
+            )
 
-        return res
+            if msgL:
+                res = automaton.update(dict(msgL))
+                if res is not None:
+                    state,varsL = res
+                    #varsL = [automaton.getVariableName(var) for var,_ in varsL]
+                    print("[{}] [{}] {} {}".format(seqNb, automaton.getName(), state, varsL))
+
+    return doPrinter
 
 
 def main():
@@ -42,14 +57,15 @@ def main():
     )
 
     args = argParser.parse_args()
-    automata = parseYaml(args.yaml)
+    automata = icscrack.fromYaml(args.yaml)
+    printer = w_printer(automata)
     if args.pcap:
         if args.verbose:
             print("[+] Loading pcap {}".format(args.pcap))
 
         pcap = scpy.rdpcap(args.pcap)
         for pkt in pcap:
-            res = icscrack.modbusCallback(SERVER_PORT, automata)(pkt)
+            res = icscrack.modbusHandler(SERVER_PORT, printer)(pkt)
             if args.verbose and res:
                 print(res)
 
@@ -58,7 +74,7 @@ def main():
         sniffer = scpy.sniff(
             filter="tcp and port {}".format(SERVER_PORT),
             iface="vboxnet2",
-            prn=icscrack.modbusCallback(SERVER_PORT, automata)
+            prn=icscrack.modbusHandler(SERVER_PORT, printer)
         )
 
 

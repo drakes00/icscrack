@@ -1,2 +1,9 @@
 [v0.1]
     Working example on bottle factory.
+
+[v0.2]
+    Added: Client behavior for bottle factory.
+    Updated: Automata are no longer created from Yaml file but from JFF.
+    Updated: Yaml file now reference JFF files as behaviors.
+    Fixup: Automata updating and printing is now done in a callback rather than
+        in the MODBUS handler.

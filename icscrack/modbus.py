@@ -44,11 +44,8 @@ WRITE_QUEUE = {
 }
 
 
-def callback(serverPort, automata=None):
-    if automata is None:
-        automata = []
-
-    def w_modbusCallback(pkt):
+def modbusHandler(serverPort, callback):
+    def handler(pkt):
         if scpy.TCP in pkt and scpy.Raw in pkt:
             modbusPkt = pkt[scpy.Raw].load
             seqNb = int.from_bytes(modbusPkt[0:2], byteorder="big")
@@ -56,7 +53,6 @@ def callback(serverPort, automata=None):
             payload = modbusPkt[8:]
 
             parsed = []
-            res = None
 
             if pkt[scpy.TCP].dport == serverPort:
                 parsed = handleRequest(fnCode, payload)
@@ -65,24 +61,9 @@ def callback(serverPort, automata=None):
             else:
                 return
 
-            for automaton in automata:
-                msgL = sum(
-                    filter(
-                        None,
-                        map(
-                            lambda _: _[1] if _[0] in ("ReadResp", "WriteReq") else [],
-                            parsed
-                        )
-                    ), []
-                )
+            callback(seqNb, parsed)
 
-                if msgL:
-                    res = automaton.update(dict(msgL))
-
-                if res is not None:
-                    print("[{}] {}".format(seqNb, res))
-
-    return w_modbusCallback
+    return handler
 
 
 ##  Handles a MODBUS request of multiple coils reading (fn code 1).
