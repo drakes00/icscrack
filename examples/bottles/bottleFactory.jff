@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>
-	<type>mealy</type>
-	<automaton>
-		<!--The list of states.-->
-		<state id="0" name="Iddle">
-			<x>326.0</x>
-			<y>255.0</y>
-			<initial/>
-		</state>
-		<state id="1" name="Moving">
-			<x>1233.0</x>
-			<y>256.0</y>
-		</state>
-		<state id="2" name="Pouring">
-			<x>792.0</x>
-			<y>786.0</y>
-		</state>
-		<!--The list of transitions.-->
-		<transition>
-			<from>0</from>
-			<to>2</to>
-			<read>[(processRun, True), (bottleInPlace, True)]</read>
-			<transout>[(motor, False), (nozzle, True)]</transout>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>0</to>
-			<read>[(processRun, False)]</read>
-			<transout>[(motor, False), (nozzle, False)]</transout>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>2</to>
-			<read>[(bottleInPlace, True), (level, False)]</read>
-			<transout>[(motor, False), (nozzle, True)]</transout>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>1</to>
-			<read>[(processRun, True), (bottleInPlace, False)]</read>
-			<transout>[(motor, True), (nozzle, False)]</transout>
-		</transition>
-		<transition>
-			<from>2</from>
-			<to>0</to>
-			<read>[(processRun, False)]</read>
-			<transout>[(motor, False), (nozzle, False)]</transout>
-		</transition>
-		<transition>
-			<from>2</from>
-			<to>1</to>
-			<read>[(bottleInPlace, False), (level, True)]</read>
-			<transout>[(motor, True), (nozzle, False)]</transout>
-		</transition>
-	</automaton>
+    <type>mealy</type>
+    <automaton>
+        <!--The list of states.-->
+        <state id="0" name="Iddle">
+            <x>326.0</x>
+            <y>255.0</y>
+            <initial/>
+        </state>
+        <state id="1" name="Moving">
+            <x>1233.0</x>
+            <y>256.0</y>
+        </state>
+        <state id="2" name="Pouring">
+            <x>792.0</x>
+            <y>786.0</y>
+        </state>
+        <!--The list of transitions.-->
+        <transition>
+            <from>0</from>
+            <to>2</to>
+            <read>[(processRun, True), (bottleInPlace, True)]</read>
+            <transout>[(motor, False), (nozzle, True)]</transout>
+        </transition>
+        <transition>
+            <from>1</from>
+            <to>0</to>
+            <read>[(processRun, False)]</read>
+            <transout>[(motor, False), (nozzle, False)]</transout>
+        </transition>
+        <transition>
+            <from>1</from>
+            <to>2</to>
+            <read>[(bottleInPlace, True), (level, False)]</read>
+            <transout>[(motor, False), (nozzle, True)]</transout>
+        </transition>
+        <transition>
+            <from>0</from>
+            <to>1</to>
+            <read>[(processRun, True), (bottleInPlace, False)]</read>
+            <transout>[(motor, True), (nozzle, False)]</transout>
+        </transition>
+        <transition>
+            <from>2</from>
+            <to>0</to>
+            <read>[(processRun, False)]</read>
+            <transout>[(motor, False), (nozzle, False)]</transout>
+        </transition>
+        <transition>
+            <from>2</from>
+            <to>1</to>
+            <read>[(bottleInPlace, False), (level, True)]</read>
+            <transout>[(motor, True), (nozzle, False)]</transout>
+        </transition>
+    </automaton>
 </structure>

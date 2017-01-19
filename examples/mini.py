@@ -13,8 +13,8 @@ SERVER_PORT = 5020
 def w_printer(automata):
     def doPrinter(seqNb, parsed):
         for automaton in automata:
-            if automaton.getName() not in ("hmi", "bottleFactory"):
-                continue
+            #if automaton.getName() not in ("elec"):
+            #    continue
 
             msgL = sum(
                 filter(

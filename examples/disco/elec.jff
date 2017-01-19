@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>
+	<type>mealy</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="FFFF">
+			<x>260.0</x>
+			<y>781.0</y>
+			<initial/>
+		</state>
+		<state id="1" name="OFFF">
+			<x>559.0</x>
+			<y>623.0</y>
+		</state>
+		<state id="2" name="FOFF">
+			<x>558.0</x>
+			<y>778.0</y>
+		</state>
+		<state id="3" name="FFOF">
+			<x>552.0</x>
+			<y>923.0</y>
+		</state>
+		<state id="4" name="FOOF">
+			<x>852.0</x>
+			<y>916.0</y>
+		</state>
+		<state id="5" name="OFOF">
+			<x>851.0</x>
+			<y>767.0</y>
+		</state>
+		<state id="6" name="OOFF">
+			<x>854.0</x>
+			<y>604.0</y>
+		</state>
+		<state id="7" name="OOOF">
+			<x>1125.0</x>
+			<y>758.0</y>
+		</state>
+		<state id="8" name="OFFO">
+			<x>1117.0</x>
+			<y>67.0</y>
+		</state>
+		<state id="9" name="OOFO">
+			<x>1439.0</x>
+			<y>62.0</y>
+		</state>
+		<state id="10" name="OFOO">
+			<x>1436.0</x>
+			<y>226.0</y>
+		</state>
+		<state id="11" name="FOOO">
+			<x>1443.0</x>
+			<y>378.0</y>
+		</state>
+		<state id="12" name="OOOO">
+			<x>1729.0</x>
+			<y>197.0</y>
+		</state>
+		<state id="14" name="FOFO">
+			<x>1118.0</x>
+			<y>223.0</y>
+		</state>
+		<state id="15" name="FFOO">
+			<x>1123.0</x>
+			<y>399.0</y>
+		</state>
+		<state id="16" name="FFFO">
+			<x>823.0</x>
+			<y>244.0</y>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>4</from>
+			<to>3</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>9</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>1</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>9</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>15</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>5</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>11</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>15</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>3</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>9</to>
+			<read>[(disco, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>11</to>
+			<read>[(disco, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>2</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>6</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>4</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>2</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>9</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>11</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>0</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>6</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>8</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>0</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>6</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>7</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>4</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>14</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>10</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>3</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>8</to>
+			<read>[(disco, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>1</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>2</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>14</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>0</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>1</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>16</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>4</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>15</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>5</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>7</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>12</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>14</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>10</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>8</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>8</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>11</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>16</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>5</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>10</to>
+			<read>[(disco, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>7</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>5</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>4</to>
+			<read>[(b1, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>12</to>
+			<read>[(b2, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>12</to>
+			<read>[(disco, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>7</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>16</to>
+			<read>[(b2, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>16</from>
+			<to>0</to>
+			<read>[(disco, True)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<read>[(b3, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>10</to>
+			<read>[(b1, False)]</read>
+			<transout/>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>6</to>
+			<read>[(b3, True)]</read>
+			<transout/>
+		</transition>
+	</automaton>
+</structure>

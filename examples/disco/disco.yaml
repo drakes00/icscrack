@@ -1,0 +1,24 @@
+topology:
+    servers:
+         elec: &elec
+            ip: 127.0.0.1
+            port: 5020
+            protocol: Modbus
+            variables: &elecVars
+                b1:     [HoldingRegister, 0x01] # Breaker 1.
+                b2:     [HoldingRegister, 0x02] # Breaker 2.
+                b3:     [HoldingRegister, 0x03] # Breaker 3.
+                disco:  [HoldingRegister, 0x04] # Disconnector.
+
+            behavior: elec.jff
+
+    clients:
+        hmi: &hmi
+            ip: 127.0.0.1
+            variables: *elecVars
+            #behavior: hmi.jff
+
+    channels:
+        chan:
+            server: *elec
+            client: *hmi

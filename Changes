@@ -13,3 +13,6 @@
 
 [v0.3.1]
     Fixup: Missing call to dict.items in automaton update.
+
+[v0.4]
+    Working example on electrical disconnector.

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>
-	<type>mealy</type>
-	<automaton>
-		<!--The list of states.-->
-		<state id="0" name="Iddle">
-			<x>88.0</x>
-			<y>151.0</y>
-			<initial/>
-		</state>
-		<state id="1" name="Running">
-			<x>450.0</x>
-			<y>155.0</y>
-		</state>
-		<!--The list of transitions.-->
-		<transition>
-			<from>1</from>
-			<to>0</to>
-			<read>[(processRun, False)]</read>
-			<transout>[(processRun, False)]</transout>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>1</to>
-			<read>[(processRun, True)]</read>
-			<transout>[(processRun, True)]</transout>
-		</transition>
-	</automaton>
+    <type>mealy</type>
+    <automaton>
+        <!--The list of states.-->
+        <state id="0" name="Iddle">
+            <x>88.0</x>
+            <y>151.0</y>
+            <initial/>
+        </state>
+        <state id="1" name="Running">
+            <x>450.0</x>
+            <y>155.0</y>
+        </state>
+        <!--The list of transitions.-->
+        <transition>
+            <from>1</from>
+            <to>0</to>
+            <read>[(processRun, False)]</read>
+            <transout>[(processRun, False)]</transout>
+        </transition>
+        <transition>
+            <from>0</from>
+            <to>1</to>
+            <read>[(processRun, True)]</read>
+            <transout>[(processRun, True)]</transout>
+        </transition>
+    </automaton>
 </structure>
