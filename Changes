@@ -7,3 +7,6 @@
     Updated: Yaml file now reference JFF files as behaviors.
     Fixup: Automata updating and printing is now done in a callback rather than
         in the MODBUS handler.
+
+[v0.3]
+    Fixup: Input and output variables of automata are merged in a common dict.

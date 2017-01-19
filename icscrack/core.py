@@ -48,7 +48,7 @@ def fromYaml(yamlPath):
     res = []
     for name, attributes in agents.items():
         try:
-            variables = attributes["variables"]
+            variables = {k:tuple(v) for k,v in attributes["variables"].items()}
             behavior = "{}/{}".format(
                 os.path.dirname(yamlPath),
                 attributes["behavior"]
@@ -64,21 +64,19 @@ class Automaton(object):
     _name       = None
     _states     = None
     _start      = None
-    _inputs     = None
-    _outputs    = None
+    _variables  = None
     _transFunc  = None
     _outputFunc = None
     _current    = None
 
-    def __init__(self, name, states, start, inputs, outputs, transFunc, outputFunc):
+    def __init__(self, name, states, start, variables, transFunc, outputFunc):
         self._name       = name
         self._states     = states
         self._start      = start
-        self._inputs     = inputs
-        self._outputs    = outputs
+        self._variables  = variables
         self._transFunc  = transFunc
         self._outputFunc = outputFunc
-        self._values     = {k: None for k in self._inputs}
+        self._values     = {k: None for k in self._variables.values()}
 
         self._current    = self._start
 
@@ -86,14 +84,20 @@ class Automaton(object):
     ##  Returns the name of the automaton.
     #   @return The name of the automaton.
     def getName(self):
+        """ Returns the name of the automaton. """
         return self._name
 
 
     ##  Returns the name of a variable from its mapping.
     #   @param  mapping Mapping of the variable.
-    #   @return The name of a variable from its mapping.
-    #def getVariableName(self, mapping):
-    #    for varName,varMap in self._
+    #   @return The name of a variable from its mapping or None if not found.
+    def getVariableName(self, mapping):
+        """ Returns the name of a variable from its mapping. """
+        for varName,varMap in self._variables.items():
+            if varMap == mapping:
+                return varName
+
+        return None
 
 
     ##  Update the automaton from a list of input messages.
@@ -104,13 +108,13 @@ class Automaton(object):
         def _computeInputs(msgL):
             notNones = set()
             nones = set()
-            for var in self._inputs:
-                if var in msgL:
-                    notNones.add((var, msgL[var]))
-                elif self._values[var] is not None:
-                    notNones.add((var, self._values[var]))
+            for varMap in self._variables.values():
+                if varMap in msgL:
+                    notNones.add((varMap, msgL[varMap]))
+                elif self._values[varMap] is not None:
+                    notNones.add((varMap, self._values[varMap]))
                 else:
-                    nones.add(var)
+                    nones.add(varMap)
 
             return notNones,nones
 
@@ -126,20 +130,20 @@ class Automaton(object):
                 res = self._outputFunc[(self._current, newState)]
 
                 self._current = newState
-                for var,newVal in msgL:
-                    if var in self._inputs:
-                        self._values[var] = newVal
+                for varMap,newVal in msgL:
+                    if varMap in self._variables.values():
+                        self._values[varMap] = newVal
 
                 return (self._current, res)
 
         # If no transition was matching and missing transition "seems" relevant, raise.
         # Transition is declared relevant if at least one of its variables is an
         # input of the automaton and changes value.
-        for var,newVal in msgL:
-            if var in self._inputs:
-                if self._values[var] is None:
-                    self._values[var] = newVal
-                elif self._values[var] != newVal:
+        for varMap,newVal in msgL:
+            if varMap in self._variables.values():
+                if self._values[varMap] is None:
+                    self._values[varMap] = newVal
+                elif self._values[varMap] != newVal:
                     raise errors.TransitionError(msgL)
 
 
@@ -166,8 +170,6 @@ class Automaton(object):
 
         states     = {}
         start      = None
-        inputs     = set()
-        outputs    = set()
         transFunc  = {}
         outputFunc = {}
         for node in auto.getchildren():
@@ -182,8 +184,6 @@ class Automaton(object):
                 trans = _parseTrans(trans)
                 output = _parseTrans(output)
 
-                inputs = inputs.union(set([_[0] for _ in trans]))
-                outputs = outputs.union(set([_[0] for _ in output]))
                 transFunc[(states[nodeFrom], tuple(trans))] = states[nodeTo]
                 outputFunc[(states[nodeFrom], states[nodeTo])] = output
 
@@ -191,8 +191,7 @@ class Automaton(object):
             name,
             states,
             start,
-            inputs,
-            outputs,
+            variables,
             transFunc,
             outputFunc
         )
