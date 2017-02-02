@@ -109,7 +109,7 @@ class Automaton(object):
             notNones = set()
             nones = set()
             for varMap in self._variables.values():
-                if varMap in msgL:
+                if varMap in msgL.keys():
                     notNones.add((varMap, msgL[varMap]))
                 elif self._values[varMap] is not None:
                     notNones.add((varMap, self._values[varMap]))
@@ -130,7 +130,7 @@ class Automaton(object):
                 res = self._outputFunc[(self._current, newState)]
 
                 self._current = newState
-                for varMap,newVal in msgL:
+                for varMap,newVal in msgL.items():
                     if varMap in self._variables.values():
                         self._values[varMap] = newVal
 

@@ -16,3 +16,7 @@
 
 [v0.4]
     Working example on electrical disconnector.
+
+[v0.4.1]
+    Fixup: Conflict between Coils and HoldingRegisters in electrical disconnector.
+    Fixup: Missing call to dict.items in automaton update.

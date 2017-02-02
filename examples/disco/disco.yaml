@@ -5,10 +5,10 @@ topology:
             port: 5020
             protocol: Modbus
             variables: &elecVars
-                b1:     [HoldingRegister, 0x01] # Breaker 1.
-                b2:     [HoldingRegister, 0x02] # Breaker 2.
-                b3:     [HoldingRegister, 0x03] # Breaker 3.
-                disco:  [HoldingRegister, 0x04] # Disconnector.
+                b1:     [Coil, 0x01] # Breaker 1.
+                b2:     [Coil, 0x02] # Breaker 2.
+                b3:     [Coil, 0x03] # Breaker 3.
+                disco:  [Coil, 0x04] # Disconnector.
 
             behavior: elec.jff
 

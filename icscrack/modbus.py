@@ -99,17 +99,16 @@ def handleRespReadMultCO(payload):
     """ Handles a MODBUS response of multiple coils reading (fn code 1). """
     bits = int.from_bytes(payload[1:], byteorder="big")
     tmp = []
-    res = [("ReadResp", tmp)]
     while True:
         try:
             req = READ_QUEUE["Coil"].pop(0)
-            bit = bits & 0x1
+            bit = bool(bits & 0x1)
             bits >>= 1
             tmp += [(("Coil", req), bit)]
         except IndexError:
             break
 
-    return res
+    return [("ReadResp", tmp)]
 
 
 ##  Handles a MODBUS request of multiple discrete inputs reading (fn code 2).
@@ -145,17 +144,16 @@ def handleRespReadMultDI(payload):
     """ Handles a MODBUS response of multiple discrete inputs reading (fn code 2). """
     bits = int.from_bytes(payload[1:], byteorder="big")
     tmp = []
-    res = [("ReadResp", tmp)]
     while True:
         try:
             req = READ_QUEUE["DiscreteInput"].pop(0)
-            bit = bits & 0x1
+            bit = bool(bits & 0x1)
             bits >>= 1
             tmp += [(("DiscreteInput", req), bit)]
         except IndexError:
             break
 
-    return res
+    return [("ReadResp", tmp)]
 
 
 ##  Handles a MODBUS request of multiple holding registers reading (fn code 3).
@@ -191,7 +189,6 @@ def handleRespReadMultHR(payload):
     """ Handles a MODBUS response of multiple holding registers reading (fn code 3). """
     values = payload[1:]
     tmp = []
-    res = [("ReadResp", tmp)]
     while True:
         try:
             req = READ_QUEUE["HoldingRegister"].pop(0)
@@ -201,7 +198,7 @@ def handleRespReadMultHR(payload):
         except IndexError:
             break
 
-    return res
+    return [("ReadResp", tmp)]
 
 
 ##  Handles a MODBUS request of multiple input registers reading (fn code 4).
@@ -237,7 +234,6 @@ def handleRespReadMultIR(payload):
     """ Handles a MODBUS response of multiple input registers reading (fn code 4). """
     values = payload[1:]
     tmp = []
-    res = [("ReadResp", tmp)]
     while True:
         try:
             req = READ_QUEUE["InputRegister"].pop(0)
@@ -247,7 +243,7 @@ def handleRespReadMultIR(payload):
         except IndexError:
             break
 
-    return res
+    return [("ReadResp", tmp)]
 
 
 ##  Handles a MODBUS request of single coil writing (fn code 5).
@@ -263,11 +259,10 @@ def handleRespReadMultIR(payload):
 def handleReqWriteSingCO(payload):
     """ Handles a MODBUS request of single coil writing (fn code 5). """
     addr = int.from_bytes(payload[:2], byteorder="big")
-    value = int.from_bytes(payload[2:4], byteorder="big")
-    res = (addr, value)
+    value = bool(int.from_bytes(payload[2:4], byteorder="big"))
 
-    WRITE_QUEUE["Coil"] += [res]
-    return [("WriteReq", [("Coil", res)])]
+    WRITE_QUEUE["Coil"] += [(addr, value)]
+    return [("WriteReq", [(("Coil", addr), value)])]
 
 
 ##  Handles a MODBUS response of single coil writing (fn code 5).
@@ -283,11 +278,10 @@ def handleReqWriteSingCO(payload):
 def handleRespWriteSingCO(payload):
     """ Handles a MODBUS response of single coil writing (fn code 5). """
     addr = int.from_bytes(payload[:2], byteorder="big")
-    value = int.from_bytes(payload[2:4], byteorder="big")
-    res = (addr, value)
+    value = bool(int.from_bytes(payload[2:4], byteorder="big"))
 
     WRITE_QUEUE["Coil"].pop(0)
-    return [("WriteResp", [("Coil", res)])]
+    return [("WriteResp", [(("Coil", addr), value)])]
 
 
 ##  Handles a MODBUS request of multiple coils writing (fn code 15).
@@ -310,7 +304,7 @@ def handleReqWriteMultCO(payload):
 
     res = []
     for addr in range(first, first+nbAddr):
-        bit = 0x0000 if bits & 0x1 == 0 else 0xFF00
+        bit = False if bits & 0x1 == 0 else True
         bits >>= 1
         res += [(addr, bit)]
 
