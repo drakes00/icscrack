@@ -20,3 +20,7 @@
 [v0.4.1]
     Fixup: Conflict between Coils and HoldingRegisters in electrical disconnector.
     Fixup: Missing call to dict.items in automaton update.
+
+[v0.4.2]
+    Fixup: Missing update of automaton outout variables.
+    Update: Uncommented output variable name printing intead of mappings.

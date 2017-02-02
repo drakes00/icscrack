@@ -13,9 +13,6 @@ SERVER_PORT = 5020
 def w_printer(automata):
     def doPrinter(seqNb, parsed):
         for automaton in automata:
-            #if automaton.getName() not in ("elec"):
-            #    continue
-
             msgL = sum(
                 filter(
                     None,
@@ -30,7 +27,7 @@ def w_printer(automata):
                 res = automaton.update(dict(msgL))
                 if res is not None:
                     state,varsL = res
-                    #varsL = [automaton.getVariableName(var) for var,_ in varsL]
+                    varsL = [(automaton.getVariableName(var),val) for var,val in varsL]
                     print("[{}] [{}] {} {}".format(seqNb, automaton.getName(), state, varsL))
 
     return doPrinter

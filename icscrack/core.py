@@ -134,6 +134,10 @@ class Automaton(object):
                     if varMap in self._variables.values():
                         self._values[varMap] = newVal
 
+                for varMap,newVal in res:
+                    if varMap in self._variables.values():
+                        self._values[varMap] = newVal
+
                 return (self._current, res)
 
         # If no transition was matching and missing transition "seems" relevant, raise.
